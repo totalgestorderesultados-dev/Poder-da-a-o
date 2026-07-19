@@ -2,7 +2,7 @@ import express from "express";
 import path from "path";
 import fs from "fs/promises";
 import { createServer as createViteServer } from "vite";
-import { Lead, AdminConfig, VerificationSession } from "./src/types.js";
+import { Lead, AdminConfig, VerificationSession } from "./src/types.ts";
 
 // Paths for JSON storage
 const LEADS_FILE = path.join(process.cwd(), "leads.json");
