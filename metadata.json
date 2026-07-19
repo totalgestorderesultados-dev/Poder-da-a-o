@@ -1,0 +1,6 @@
+{
+  "name": "ValidaZap Leads",
+  "description": "Sistema de captura de leads com validação de código (OTC) via WhatsApp, painel administrativo e gerenciador de links de redirecionamento.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
