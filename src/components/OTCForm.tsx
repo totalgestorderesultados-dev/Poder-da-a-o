@@ -61,6 +61,11 @@ export default function OTCForm({ onSuccess, onShowToast }: OTCFormProps) {
         body: JSON.stringify({ name, whatsapp: cleanNum }),
       });
 
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new Error("O servidor está iniciando ou instável. Por favor, aguarde alguns segundos e clique novamente.");
+      }
+
       const data = await response.json();
 
       if (!response.ok) {
@@ -151,6 +156,11 @@ export default function OTCForm({ onSuccess, onShowToast }: OTCFormProps) {
         body: JSON.stringify({ whatsapp: cleanNum, code: fullCode }),
       });
 
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new Error("O servidor está iniciando ou instável. Por favor, aguarde alguns segundos e tente novamente.");
+      }
+
       const data = await response.json();
 
       if (!response.ok) {
@@ -179,6 +189,11 @@ export default function OTCForm({ onSuccess, onShowToast }: OTCFormProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, whatsapp: cleanNum }),
       });
+
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new Error("O servidor está iniciando ou instável. Por favor, aguarde alguns segundos e tente novamente.");
+      }
 
       const data = await response.json();
 
