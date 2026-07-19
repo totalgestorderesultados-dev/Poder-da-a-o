@@ -9,10 +9,15 @@ export default function App() {
   const [isVerified, setIsVerified] = useState(false);
   const [redirectUrl, setRedirectUrl] = useState("");
   const [registeredLead, setRegisteredLead] = useState<any>(null);
+  const [isIframe, setIsIframe] = useState(false);
   
   // Simulated Toast Notification for OTC code
   const [toast, setToast] = useState<{ message: string; code: string } | null>(null);
   const [countdown, setCountdown] = useState(5); // Success redirect countdown
+
+  useEffect(() => {
+    setIsIframe(window.self !== window.top);
+  }, []);
 
   // Show Toast handler
   const handleShowToast = (message: string, code: string) => {
@@ -70,6 +75,22 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col justify-between font-sans relative overflow-x-hidden selection:bg-emerald-200">
+      
+      {/* Iframe Cookie Check Warning Bar */}
+      {isIframe && (
+        <div className="bg-amber-500 text-white px-4 py-2 text-center text-xs md:text-sm font-semibold flex items-center justify-center gap-2 shadow-md">
+          <AlertCircle size={16} className="shrink-0" />
+          <span>Para o perfeito funcionamento, clique em "Abrir em Nova Aba" no topo do AI Studio ou</span>
+          <a
+            href={window.location.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline inline-flex items-center gap-1 hover:text-amber-100 font-bold"
+          >
+            clique aqui para abrir em tela cheia <ExternalLink size={12} />
+          </a>
+        </div>
+      )}
       
       {/* Simulated WhatsApp Toast Notification Container */}
       <AnimatePresence>

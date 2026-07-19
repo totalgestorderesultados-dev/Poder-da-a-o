@@ -14,12 +14,17 @@ export default function OTCForm({ onSuccess, onShowToast }: OTCFormProps) {
   const [code, setCode] = useState<string[]>(Array(6).fill(""));
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isIframe, setIsIframe] = useState(false);
   
   // Timer for code resend
   const [countdown, setCountdown] = useState(0);
   
   // Refs for the 6-digit OTC input boxes
   const inputRefs = useRef<HTMLInputElement[]>([]);
+
+  useEffect(() => {
+    setIsIframe(window.self !== window.top);
+  }, []);
 
   // Format WhatsApp input: (XX) XXXXX-XXXX
   const formatWhatsapp = (value: string) => {
@@ -238,8 +243,24 @@ export default function OTCForm({ onSuccess, onShowToast }: OTCFormProps) {
 
             <form onSubmit={handleSendCode} className="space-y-5">
               {error && (
-                <div id="step1-error" className="p-3 bg-rose-50 border-l-4 border-rose-500 text-rose-700 text-sm rounded">
-                  {error}
+                <div id="step1-error" className="p-4 bg-rose-50 border border-rose-100 text-rose-800 text-sm rounded-xl space-y-3">
+                  <p className="font-semibold leading-relaxed">{error}</p>
+                  {isIframe && (
+                    <div className="pt-2.5 border-t border-rose-200/60 flex flex-col sm:flex-row items-center justify-between gap-3 text-left">
+                      <span className="text-xs text-rose-700 font-medium leading-relaxed">
+                        ⚠️ O navegador bloqueia cookies de segurança quando o app roda embutido. Abra em tela cheia para resolver!
+                      </span>
+                      <a
+                        href={window.location.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg text-xs transition-all shadow-md shrink-0 whitespace-nowrap"
+                      >
+                        Abrir em Nova Aba
+                        <ExternalLink size={12} />
+                      </a>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -338,8 +359,24 @@ export default function OTCForm({ onSuccess, onShowToast }: OTCFormProps) {
 
             <div className="space-y-6">
               {error && (
-                <div id="step2-error" className="p-3 bg-rose-50 border-l-4 border-rose-500 text-rose-700 text-sm rounded">
-                  {error}
+                <div id="step2-error" className="p-4 bg-rose-50 border border-rose-100 text-rose-800 text-sm rounded-xl space-y-3">
+                  <p className="font-semibold leading-relaxed">{error}</p>
+                  {isIframe && (
+                    <div className="pt-2.5 border-t border-rose-200/60 flex flex-col sm:flex-row items-center justify-between gap-3 text-left">
+                      <span className="text-xs text-rose-700 font-medium leading-relaxed">
+                        ⚠️ O navegador bloqueia cookies de segurança quando o app roda embutido. Abra em tela cheia para resolver!
+                      </span>
+                      <a
+                        href={window.location.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg text-xs transition-all shadow-md shrink-0 whitespace-nowrap"
+                      >
+                        Abrir em Nova Aba
+                        <ExternalLink size={12} />
+                      </a>
+                    </div>
+                  )}
                 </div>
               )}
 

@@ -15,6 +15,7 @@ export default function AdminPanel({ onClose }: AdminPanelProps) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isIframe, setIsIframe] = useState(false);
   
   // Stored state
   const [leads, setLeads] = useState<Lead[]>([]);
@@ -27,6 +28,10 @@ export default function AdminPanel({ onClose }: AdminPanelProps) {
   
   // Notification banner state
   const [statusMsg, setStatusMsg] = useState<{ text: string; type: "success" | "error" } | null>(null);
+
+  useEffect(() => {
+    setIsIframe(window.self !== window.top);
+  }, []);
 
   // Auto-clear message
   useEffect(() => {
@@ -46,6 +51,12 @@ export default function AdminPanel({ onClose }: AdminPanelProps) {
       const leadsRes = await fetch("/api/admin/leads", {
         headers: { "Authorization": `Bearer ${authCode}` }
       });
+      
+      const contentType = leadsRes.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new Error("Não foi possível conectar ao servidor. O navegador está bloqueando cookies de segurança devido ao visualizador integrado.");
+      }
+
       if (!leadsRes.ok) {
         throw new Error("Senha administrativa incorreta.");
       }
@@ -217,9 +228,27 @@ export default function AdminPanel({ onClose }: AdminPanelProps) {
 
             <form onSubmit={handleLoginSubmit} className="space-y-4">
               {error && (
-                <div id="admin-login-error" className="p-3 bg-rose-50 border-l-4 border-rose-500 text-rose-700 text-sm rounded flex items-center gap-2">
-                  <AlertCircle size={16} />
-                  <span>{error}</span>
+                <div id="admin-login-error" className="p-4 bg-rose-50 border border-rose-100 text-rose-800 text-sm rounded-xl space-y-3 flex flex-col">
+                  <div className="flex items-start gap-2">
+                    <AlertCircle size={16} className="shrink-0 mt-0.5 text-rose-600" />
+                    <span className="font-semibold leading-relaxed">{error}</span>
+                  </div>
+                  {isIframe && (
+                    <div className="pt-2.5 border-t border-rose-200/60 flex flex-col gap-2 text-left">
+                      <span className="text-[11px] text-rose-700 font-medium leading-relaxed">
+                        ⚠️ O navegador bloqueia os cookies de login no visualizador integrado. Abra em tela cheia para gerenciar o painel.
+                      </span>
+                      <a
+                        href={window.location.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-slate-850 hover:bg-slate-750 text-white font-bold rounded-lg text-xs transition-all shadow-md self-start"
+                      >
+                        Abrir em Nova Aba
+                        <ExternalLink size={12} />
+                      </a>
+                    </div>
+                  )}
                 </div>
               )}
 
